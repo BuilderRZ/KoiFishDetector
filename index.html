@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <title>KoiVision AI Scanner</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script defer src="script.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(#0d1b2a, #000000);
+      color: #fff;
+      height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background: rgba(15, 30, 50, 0.85);
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #00ffe0;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      margin: 60px auto;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #00ffe0;
+      text-shadow: 0 0 10px #00ffe0;
+    }
+
+    p {
+      font-size: 14px;
+      color: #aaa;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      margin: 15px 0;
+      padding: 10px 20px;
+      background: #00ffe0;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    input[type="file"]:hover {
+      background: #00bfa6;
+      transform: scale(1.05);
+    }
+
+    #preview {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 12px;
+      margin-top: 20px;
+      box-shadow: 0 0 15px rgba(0,255,255,0.3);
+    }
+
+    #scannerLine {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #00ffe0, transparent);
+      animation: scan 2s infinite;
+      margin: 20px 0;
+      opacity: 0.8;
+    }
+
+    @keyframes scan {
+      0% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .success {
+      background-color: #004d40;
+      color: #00ffbf;
+      box-shadow: 0 0 15px #00ffbf;
+    }
+
+    .fail {
+      background-color: #330000;
+      color: #ff4f4f;
+      box-shadow: 0 0 15px #ff4f4f;
+    }
+
+    #loading {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #00ffe0;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    #subtitle {
+      margin-top: 20px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 14px;
+      color: #00ff00;
+      background-color: #00000033;
+      padding: 6px 10px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px #00ff00;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      min-height: 22px;
+      transition: opacity 0.3s ease;
+    }
+
+    #scrollDownBtn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      padding: 10px 20px;
+      background-color: #00ffe0;
+      color: #000;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00ffe0, 0 0 5px #00ffe0;
+      cursor: pointer;
+      z-index: 999;
+      transition: all 0.3s ease;
+      opacity: 0.85;
+    }
+
+    #scrollDownBtn:hover {
+      background-color: #00bfa6;
+      box-shadow: 0 0 25px #00ffe0;
+      opacity: 1;
+    }
+
+    footer {
+      font-size: 12px;
+      margin-top: 20px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tombol Scroll ke Bawah -->
+  <button id="scrollDownBtn">▼ Scroll ke Hasil</button>
+
+  <div class="container">
+    <h1>KOIVISION.AI</h1>
+    <p>Upload gambar koi kamu. Sistem akan memverifikasi keasliannya secara otomatis.</p>
+
+    <input type="file" id="imageUpload" accept="image/*" />
+    <div id="scannerLine"></div>
+    <img id="preview" style="display:none" />
+
+    <div id="loading" style="display:none;">🌀 Menganalisis data visual...</div>
+    <div id="result">📡 Menunggu gambar...</div>
+    <div id="subtitle"></div>
+
+    <!-- Suara AI -->
+    <audio id="koiSound" src="audio/koi-detected.mp3"></audio>
+    <audio id="notKoiSound" src="audio/not-koi.mp3"></audio>
+    
+    <footer>© 2025 Team Pria Misterius</footer>
+  </div>
+
+  <script>
+    // Scroll tombol ke bawah
+    document.getElementById("scrollDownBtn").addEventListener("click", () => {
+      document.getElementById("result").scrollIntoView({ behavior: "smooth" });
+    });
+  </script>
+
+</body>
+</html>
